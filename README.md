@@ -9,6 +9,7 @@ Developed by [Paul Starke](https://github.com/paulstarke) and [Sebastian Starke]
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](LICENSE)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 [![Documentation](https://img.shields.io/badge/Docs-GitHub%20Pages-blue?logo=github)](https://facebookresearch.github.io/ai4animationpy/)
+[![Web App](https://img.shields.io/badge/Web%20App-Gradio-orange)](webapp/app.py)
 
 <a href="https://youtu.be/LKl7MzFENUs">
 <img src="Media/Thumbnail.png" width="100%" alt="AI4AnimationPy Demo Video">
@@ -17,6 +18,71 @@ Developed by [Paul Starke](https://github.com/paulstarke) and [Sebastian Starke]
 </div>
 
 AI4AnimationPy enables character animation through neural networks and provides useful tools for motion capture processing, training & inference, and animation engineering. The framework brings [AI4Animation](https://github.com/sebastianstarke/AI4Animation) to Python — removing the Unity dependency for data-processing, feature-extraction, inference, and post-processing while keeping similar game-engine-style architecture (ECS, update loops, rendering pipeline). Everything runs on **NumPy** or **PyTorch**, so training, inference, and visualization happen in one unified environment.
+
+## 🌐 Web Studio (2026 Edition)
+
+AI4Animation Studio is a browser-based interface that runs on **any device with a web browser** — no local GPU or display required.
+
+### Quick Start
+
+```bash
+# 1. Install web dependencies
+pip install -r requirements-web.txt
+
+# 2. Launch the studio
+python webapp/app.py
+# → Open http://localhost:7860
+```
+
+### Docker (one-command deploy)
+
+```bash
+docker compose up
+# → Open http://localhost:7860
+```
+
+### Studio Features
+
+| Feature | Description |
+|---|---|
+| 📂 **Motion Viewer** | Upload `.bvh` / `.npz` files and scrub through frames in a 3D skeleton viewer |
+| 🤖 **AI Inbetweening** | Transformer-based generation of smooth in-between frames for any keyframe pair |
+| 🔀 **Seamless Transitions** | Cross-fade, phase-matched, and inertia-preserving clip transitions |
+| 📁 **Project Management** | Create, save, and reload projects with automatic clip storage |
+| 📋 **Logs** | Structured per-project event log (SQLite + JSONL) |
+
+### 2026 AI Pipeline Modules
+
+| Module | Location | Description |
+|---|---|---|
+| `MotionInbetweener` | `ai4animation/AI/Inbetweening.py` | Transformer model for automated frame interpolation |
+| `TransitionBlender` | `ai4animation/Animation/SeamlessTransitions.py` | Cosine/cubic cross-fade between clips |
+| `PhaseMatchedTransition` | `ai4animation/Animation/SeamlessTransitions.py` | Gait-phase-aligned transitions (no foot pop) |
+| `InertiaTransition` | `ai4animation/Animation/SeamlessTransitions.py` | Momentum-preserving clip stitching |
+| `BlendTree` | `ai4animation/Animation/SeamlessTransitions.py` | Real-time weighted blending of N clips |
+| `ProjectManager` | `ai4animation/Projects/ProjectManager.py` | Project CRUD, clip storage (npz), SQLite logging |
+
+#### Using modules directly in Python
+
+```python
+from ai4animation.AI.Inbetweening import MotionInbetweener
+from ai4animation.Animation.SeamlessTransitions import TransitionBlender, ClipHandle
+from ai4animation.Projects.ProjectManager import ProjectManager
+
+# AI Inbetweening
+ib = MotionInbetweener(joint_dim=3, num_joints=22)
+result = ib.inbetween(start_pose, end_pose, num_inbetween=15)  # [17, J*3]
+
+# Seamless transition
+blender = TransitionBlender(blend_frames=20, curve="cosine")
+merged = blender.blend(clip_a, clip_b)  # ClipHandle
+
+# Project management
+pm = ProjectManager()
+project = pm.create_project("My Project", tags=["locomotion"])
+pm.save_clip(project.id, "walk", positions, rotations, framerate=30.0)
+pm.log_event(project.id, session_id, "training_complete", data={"loss": 0.003})
+```
 
 ## Getting Started
 
@@ -93,6 +159,10 @@ The training pipeline in [AI4Animation](https://github.com/sebastianstarke/AI4An
 | 🎥 | **Camera System** — Free, Fixed, Third-person, Orbit mode with smooth blending | ✅ |
 | 📦 | **Motion Import** — GLB, FBX, BVH | ✅ |
 | ⚡ | **Execution Modes** — Standalone, Headless, Manual | ✅ |
+| 🌐 | **Web Studio** — browser-based UI (Gradio + Plotly 3D viewer, Docker-ready) | ✅ |
+| 🤖 | **AI Inbetweening** — transformer model for automated in-between frame generation | ✅ |
+| 🔀 | **Seamless Transitions** — cross-fade, phase-matched, inertia-preserving blend tree | ✅ |
+| 💾 | **Project Memory** — SQLite + JSONL project persistence, clip storage, event logs | ✅ |
 | 🏗️ | Physics simulation (rigid bodies / collision) | 🔜 |
 | 🛤️ | Path planning and spline tooling | 🔜 |
 | 🔊 | Audio support | 🔜 |
