@@ -1,0 +1,17 @@
+services:
+  studio:
+    build: .
+    image: ai4animation-studio:latest
+    container_name: ai4animation-studio
+    ports:
+      - "7860:7860"
+    volumes:
+      # Persist projects and logs between container restarts
+      - ai4animation_data:/root/.ai4animation
+    environment:
+      - PORT=7860
+      - GRADIO_SHARE=0
+    restart: unless-stopped
+
+volumes:
+  ai4animation_data:

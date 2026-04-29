@@ -1,0 +1,19 @@
+# Web application dependencies for AI4Animation Studio
+# Install with: pip install -r requirements-web.txt
+
+# Core framework (already in setup.py but listed for completeness)
+torch>=2.0.0
+numpy>=1.21.0
+
+# Web UI
+gradio>=4.44.0
+
+# 3D visualisation
+plotly>=5.18.0
+
+# Remaining framework deps (needed at runtime even in headless/web mode)
+einops>=0.8.1
+pygltflib==1.16.5
+scipy>=1.7.0
+pyyaml
+tqdm
