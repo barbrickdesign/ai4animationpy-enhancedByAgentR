@@ -235,8 +235,9 @@ class InertiaTransition:
     Inertia-preserving transition that carries angular and linear momentum
     from the end of clip_a into the start of clip_b.
 
-    Inspired by physics-based systems (e.g. Sea of Remnants) where
-    environmental forces directly drive character motion.
+    Inspired by physics-based systems where environmental forces (waves, wind)
+    directly drive character motion — a key trend in 2026 game animation where
+    real-world physics dictate how characters and objects move.
 
     Parameters
     ----------
